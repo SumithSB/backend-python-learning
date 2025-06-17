@@ -17,3 +17,8 @@ async def root(name:str):
 @app.post("/path")
 async def root(item:Item):
     return {"message": item.model_dump()}
+
+
+@app.post("/path/new")
+async def root(item:Item):
+    return {"message": item.model_dump()}
