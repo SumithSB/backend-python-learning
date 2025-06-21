@@ -1,24 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-
+from google.cloud import firestore
+import json
 
 app = FastAPI()
 
-
-class Item(BaseModel):
-    name:str
-    age:int
+db = firestore.Client.from_service_account_json('firebase_service_connect.json')
 
 
-@app.get("/path")
-async def root(name:str):
-    return {"message": f"Hello {name}"}
-
-@app.post("/path")
-async def root(item:Item):
-    return {"message": item.model_dump()}
-
-
-@app.post("/path/new")
-async def root(item:Item):
-    return {"message": item.model_dump()}
+@app.get("/categories")
+async def get_categories():
+    categories_ref = db.collection('categories')
+    categories = categories_ref.get()
+    result = []
+    for category in categories:
+        result.append(category.to_dict())
+    return result
